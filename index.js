@@ -3,17 +3,21 @@ const Engineer = require("./lib/Engineer");
 const Manager = require("./lib/Manager");
 const Intern = require("./lib/Intern");
 const fs = require('fs');
-const team = [];
+const path = require("path");
+const generateTeam = require('./src/page-template.js');
 
-// array of questions for user
+const Employees = [];
+
+
+// Question Paths 
 function managerQuestions(){
 
     inquirer.prompt([
 
     {
         type: "input",
-        message: "Manager Name?",
-        name: "managerName",
+        message: "Manager name?",
+        name: "name",
         validate: (value)=> { if (value){return true} else {return "Input your name, please."}},
     },
     {
@@ -30,7 +34,7 @@ function managerQuestions(){
     },
     {
         type: "input",
-        message: "Office Number? ",
+        message: "Office Number?",
         name: "officeNum",
         validate: (value)=> { if (value){return true} else {return "Input the Office Number, please."}},
     }, 
@@ -46,9 +50,9 @@ function managerQuestions(){
         validate: (value)=> { if (value){return true} else {return "Choose an action, please."}},
     },
     ]).then(function(answers){
-        const newManager = new Manager(answers.managerName, answers.id, answers.email, answers.officeNum)
-        team.push(newManager);
-        console.log(team);
+        const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNum)
+        Employees.push(newManager);
+        console.log(Employees);
         if (answers.action === 'Add Engineer'){
             engineerQuestions();
         } 
@@ -66,8 +70,8 @@ function engineerQuestions(){
  
     {
         type: "input",
-        message: "Engineer Name?",
-        name: "engineerName",
+        message: "Engineer name?",
+        name: "name",
         validate: (value)=> { if (value){return true} else {return "Input your name, please."}},
     },
     {
@@ -101,9 +105,9 @@ function engineerQuestions(){
     },
     
 ]).then(function(answers){
-    const newEngineer = new Engineer(answers.engineerName, answers.id, answers.email, answers.github)
-    team.push(newEngineer);
-        console.log(team);
+    const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
+    Employees.push(newEngineer);
+        console.log(Employees);
     if (answers.action === 'Add Engineer'){
         engineerQuestions();
     } 
@@ -121,7 +125,7 @@ function internQuestions(){
     {
         type: "input",
         message: "Intern Name?",
-        name: "internName",
+        name: "name",
         validate: (value)=> { if (value){return true} else {return "Input your name, please."}},
     },
     {
@@ -155,9 +159,9 @@ function internQuestions(){
     },
     
 ]).then(function(answers){
-    const newIntern = new Intern(answers.internName, answers.id, answers.email, answers.school)
-    team.push(newIntern);
-        console.log(team);
+    const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school)
+    Employees.push(newIntern);
+        console.log(Employees);
     if (answers.action === 'Add Engineer'){
         engineerQuestions();
     } 
@@ -165,30 +169,55 @@ function internQuestions(){
         internQuestions();
     }
     if (answers.action === 'Finish Bulding Team'){
-        buildTeam();
+        generateTeam();
     }
 })};
 
+function buildTeam() {
+    // Create the output directory if the output path doesn't exist
+    const response = generateTeam(Employees)
+    fs.writeFile("./output/team.html", response);
+  }
 
-// function to write README file
 
-function buildTeam(filename, data){
-
-    fs.writeFile( filename , data , (err)=>{
-        if (err) {
-            return console.log(err)
-        } 
-        else{
-        console.log("file created")}
-    })
-    }
+function startHTML() {
+    const html = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+                <script src="https://use.fontawesome.com/24967b4054.js"></script>
+                <title>Team Profile</title>
+            </head>
+            <body>
+                <nav class="navbar mb-5 text-white" style = "background-color: palevioletred; height: 10rem;">
+                    <span class="navbar-brand mb-0 h1 w-100 text-center">Team Profile</span>
+                </nav>
+                <div class="container">
+                    <div class="row">`
+    const newhtml = `yaga`
     
+    //using the file system module to write the HTML file
+    fs.writeFile("./output/team.html", html, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+    console.log("Currently building Team...");
+}
+
+
+
 
 // function to initialize program
 
 function init(){
-    managerQuestions()
     
+    managerQuestions();
+
+
 }
 
 // function call to initialize program
