@@ -6,8 +6,10 @@ const fs = require('fs');
 const path = require("path");
 const generateTeam = require('./src/page-template.js');
 
-const Employees = [];
+const OUTPUT_DIR = path.resolve(__dirname, "output")
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 
+const Employees = [];
 
 // Question Paths 
 function managerQuestions(){
@@ -52,15 +54,18 @@ function managerQuestions(){
     ]).then(function(answers){
         const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNum)
         Employees.push(newManager);
-        console.log(Employees);
+        console.log("Added new Manager");
+        
+
         if (answers.action === 'Add Engineer'){
             engineerQuestions();
         } 
         if (answers.action === 'Add Intern'){
             internQuestions();
         }
-        if (answers.action === 'Finish Bulding Team'){
-            buildTeam();
+        if (answers.action === "Finish Building Team"){
+            generateHTML();
+            
         }
 })};
 
@@ -107,15 +112,16 @@ function engineerQuestions(){
 ]).then(function(answers){
     const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
     Employees.push(newEngineer);
-        console.log(Employees);
+        console.log("Added new Engineer");
     if (answers.action === 'Add Engineer'){
         engineerQuestions();
     } 
     if (answers.action === 'Add Intern'){
         internQuestions();
     }
-    if (answers.action === 'Finish Bulding Team'){
-        buildTeam();
+    if (answers.action === "Finish Building Team"){
+        generateHTML();
+        
     }
 })};
 
@@ -161,64 +167,32 @@ function internQuestions(){
 ]).then(function(answers){
     const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school)
     Employees.push(newIntern);
-        console.log(Employees);
+    console.log("Added new Intern");
     if (answers.action === 'Add Engineer'){
         engineerQuestions();
     } 
     if (answers.action === 'Add Intern'){
         internQuestions();
     }
-    if (answers.action === 'Finish Bulding Team'){
-        generateTeam();
+    if (answers.action === "Finish Building Team"){
+        generateHTML();
+        
     }
 })};
 
+
 function buildTeam() {
-    // Create the output directory if the output path doesn't exist
-    const response = generateTeam(Employees)
-    fs.writeFile("./output/team.html", response);
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+      }
+    fs.writeFileSync(outputPath, generateTeam(Employees), "utf-8");
   }
 
-
-function startHTML() {
-    const html = `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-                <script src="https://use.fontawesome.com/24967b4054.js"></script>
-                <title>Team Profile</title>
-            </head>
-            <body>
-                <nav class="navbar mb-5 text-white" style = "background-color: palevioletred; height: 10rem;">
-                    <span class="navbar-brand mb-0 h1 w-100 text-center">Team Profile</span>
-                </nav>
-                <div class="container">
-                    <div class="row">`
-    const newhtml = `yaga`
-    
-    //using the file system module to write the HTML file
-    fs.writeFile("./output/team.html", html, function (err) {
-        if (err) {
-            console.log(err);
-        }
-    });
-    console.log("Currently building Team...");
-}
-
-
-
-
-// function to initialize program
-
-function init(){
-    
-    managerQuestions();
-
+  function generateHTML(){
+    buildTeam();
+    console.log("Team Built");
 
 }
 
 // function call to initialize program
-init();
+managerQuestions();
