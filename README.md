@@ -14,8 +14,11 @@ __________________________________________________________
 * https://github.com/SANELulu <img src='https://img.shields.io/badge/github-SANELulu-orange' alt="github-badge">
 * lucasdiaz22b@gmail.com
 __________________________________________________________
+* https://github.com/SANELulu/Profile_Generator
+* https://sanelulu.github.io/Profile_Generator/
+
 #### Demo
-[![Alt text](https://img.youtube.com/vi/https://www.youtube.com/watch?v=wWKaquDuT_E&ab_channel=LucasDiaz/0.jpg)](https://www.youtube.com/watch?v=wWKaquDuT_E&ab_channel=LucasDiaz)
+[![Demo Video](https://img.youtube.com/vi/hgNunJs2xjI/maxresdefault.jpg)](https://www.youtube.com/watch?v=hgNunJs2xjI)
 
 
 
